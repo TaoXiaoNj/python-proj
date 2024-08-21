@@ -1,11 +1,17 @@
 import sys
-
+import time
+from datetime import datetime
 import ScoreDisplay
 from poetry_demo.com.cn.data.Car import Car
 from poetry_demo.com.cn.data.Student import Student
 
 
 def main():
+    _show_info()
+    _print_time()
+
+
+def _show_info():
     print('开始运行 Hello World 程序')
 
     args = sys.argv
@@ -34,6 +40,13 @@ def main():
     car.brand = 'HONDA'
     print(car)
 
+
+
+def _print_time():
+    while True:
+        now = datetime.now()
+        print(now)
+        time.sleep(3)
 
 
 if __name__ == '__main__':
