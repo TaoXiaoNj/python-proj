@@ -1,21 +1,20 @@
 FROM python:3.11.6-slim
 
-WORKDIR /app
-## suppose the docker build context is the project root directory
-COPY . /app
-
-## install poetry
-RUN python3 cicd/install-poetry.py --version 1.8.3 && \
-    export PATH="/root/.local/bin:$PATH"
+## suppose the docker build context is the project's root directory
+## i.e., inside the `poetry_demo` folder
+COPY . /app/poetry_demo
 
 WORKDIR /app/poetry_demo
 
+## install poetry
+RUN python3 cicd/install-poetry.py --version 1.8.3
 
 ## build a wheel file "dist/poetry_demo-0.1.0-py3-none-any.whl"
-RUN poetry build
+## and install the wheel artifact
+RUN export PATH="/root/.local/bin:$PATH" && \
+    poetry build && \
+    pip3 install dist/poetry_demo-0.1.0-py3-none-any.whl
 
-## install the wheel
-RUN pip3 install poetry_demo-0.1.0-py3-none-any.whl
 
 ## remove the source code from the image
 WORKDIR /
