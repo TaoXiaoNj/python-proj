@@ -14,7 +14,6 @@ def root():
 
 @app.get("/items/{item_name}/{quantity}")
 def add_item(item_name: str, quantity: int):
-    print('调用了')
     if quantity <= 0:
         raise HTTPException(status_code=401, detail=f"Invalid quantity '{quantity}': must be positive")
     
