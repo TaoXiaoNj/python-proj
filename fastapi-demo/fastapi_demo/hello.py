@@ -1,10 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from .data.models import ItemPayload
+from .forecast.forecaster import Forecaster
 
 app = FastAPI()
 
 # key is item_id
 grocery_list: dict[int, ItemPayload] = {}
+
+forecaster = Forecaster()
 
 
 @app.get("/")
@@ -34,3 +37,9 @@ def add_item(item_name: str, quantity: int):
         grocery_list[item_id] = item
 
     return {'item': grocery_list[item_id]}
+
+
+
+@app.get("/predict/{index}")
+def predict(index: int):
+    return {'forecast reult': forecaster.predict(index)}
