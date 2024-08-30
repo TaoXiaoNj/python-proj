@@ -13,42 +13,52 @@ from pvlib.irradiance import get_total_irradiance
 from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
 import logging
+from ..io.s3 import S3Client
+
 
 logger = logging.getLogger(__name__)
 
 class Forecaster(object):
+    bucket = 'cfex-dev-se-settlement'
+
     def __init__(self) -> None:
+        self.s3_client = S3Client()
         self.load_model()
 
 
     def load_model(self):
+        # Define the path relative to the current notebook location
+        # the PWD is like "/Users/taoxiao/Downloads/ML/generation-prediction-service/notebooks"
         logger.info(f"开始加载模型 ... 当前工作目录是 {os.getcwd()}")
 
         ################## load the wind power generation model
-        # Define the path relative to the current notebook location
-        # the PWD is like "/Users/taoxiao/Downloads/ML/generation-prediction-service/notebooks"
-        data_path = 'fastapi_demo/resources/model/haystack_wind_generationy_prediction_15mins_model.pkl'
-        model_haystack_wind_generation_prediction = joblib.load(data_path)
-        logger.info(f"完成加载 {data_path}")
+        local_path = self.s3_client.download(self.bucket, "ml/haystack_wind_generationy_prediction_15mins_model.pkl")
+
+        logger.info('开始加载 model_haystack_wind_generation_prediction')
+        model_haystack_wind_generation_prediction = joblib.load(local_path)
+        logger.info('完成加载 model_haystack_wind_generation_prediction')
 
         ################## load the feature names
-        data_path = 'fastapi_demo/resources/model/haystack_wind_generation_prediction_15mins_feature_names.json'
+        local_path = self.s3_client.download(self.bucket, 'ml/haystack_wind_generation_prediction_15mins_feature_names.json')
 
         # Step 1: Read the JSON file
         # Assuming the JSON file is named 'data.json' and located in the current directory
-        with open(data_path) as f:
+        with open(local_path) as f:
+            logger.info('开始加载 generation_prediction_model_feature_names')
             generation_prediction_model_feature_names = json.load(f)
-            logger.info(f"完成加载 {data_path}")
+            logger.info('完成加载 generation_prediction_model_feature_names')
 
         #################### Load weather api data
-        data_path = Path('fastapi_demo/resources/model/haystack_wind_spreadout_15mins_20240701-20240731_weather_api_history.csv')
-        df_weather_api = pd.read_csv(data_path)
-        logger.info(f"完成加载 {data_path}")
+        local_path = self.s3_client.download(self.bucket, 'ml/haystack_wind_spreadout_15mins_20240701-20240731_weather_api_history.csv')
+        logger.info('开始加载 df_weather_api')
+        df_weather_api = pd.read_csv(local_path)
+        logger.info("完成加载 df_weather_api")
 
         #################### Load Mateomatics data
-        data_path = Path('fastapi_demo/resources/model/haystack_wind_spreadout_15mins_20231001-20240731_history.csv')
-        df_meteomatics = pd.read_csv(data_path)
-        logger.info(f"完成加载 {data_path}")
+        local_path = self.s3_client.download(self.bucket, 'ml/haystack_wind_spreadout_15mins_20231001-20240731_history.csv')
+        logger.info('开始加载 df_meteomatics')
+        df_meteomatics = pd.read_csv(local_path)
+        logger.info("完成加载 df_meteomatics")
 
         df_meteomatics['timestamp_chicago'] = pd.to_datetime(df_meteomatics['timestamp_chicago'])
 
