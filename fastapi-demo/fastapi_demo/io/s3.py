@@ -4,8 +4,6 @@ import logging
 import random
 import os
 
-from h5py.h5o import exists_by_name
-
 logger = logging.getLogger(__name__)
 
 class S3Client(object):
