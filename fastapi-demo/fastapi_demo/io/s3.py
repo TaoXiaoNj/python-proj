@@ -2,7 +2,9 @@ import string
 import boto3
 import logging
 import random
+import os
 
+from h5py.h5o import exists_by_name
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +22,9 @@ class S3Client(object):
         :param key:
         :return: the local file's name, which is a random string
         """
-        local_file_path = self.create_temp_file_name()
+        temp_folder = '.run'
+        os.makedirs(temp_folder, exist_ok=True)
+        local_file_path = os.path.join(temp_folder, self.create_temp_file_name())
 
         logger.info(f"开始下载文件：s3://{bucket}/{key} -> {local_file_path}")
         self.s3.download_file(bucket, key, local_file_path)
