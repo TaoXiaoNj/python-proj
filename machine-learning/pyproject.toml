@@ -9,7 +9,11 @@ readme = "README.md"
 python = "^3.11"
 pandas = "^2.2.2"
 numpy = "^2.1.0"
+mglearn = "^0.2.0"
 
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
 
 [build-system]
 requires = ["poetry-core"]
