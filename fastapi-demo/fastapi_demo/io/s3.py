@@ -33,3 +33,6 @@ class S3Client(object):
 
     def create_temp_file_name(self) -> str:
         return ''.join(random.choices(string.digits + string.ascii_letters, k=10))
+
+
+

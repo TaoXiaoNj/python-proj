@@ -1,45 +1,41 @@
-from fastapi import FastAPI, HTTPException
-from .data.models import ItemPayload
-from .forecast.forecaster import Forecaster
+from fastapi import FastAPI, Depends
+from typing import Annotated
+from pydantic import BaseModel
+import time
 
 app = FastAPI()
 
-# key is item_id
-grocery_list: dict[int, ItemPayload] = {}
 
-forecaster = Forecaster()
-
-
-@app.get("/")
-def root():
-    return {'message': '你好'}
+class UserOut(BaseModel):
+    user: str
 
 
-@app.get("/items/{item_name}/{quantity}")
-def add_item(item_name: str, quantity: int):
-    if quantity <= 0:
-        raise HTTPException(status_code=401, detail=f"Invalid quantity '{quantity}': must be positive")
-    
-    item_name_id_map: dict[str, int] = {
-        item.item_name: (
-            item.item_id if item.item_id is not None 
-            else 0
-        ) 
-        for item in grocery_list.values()
-    }
+class UserIn(UserOut):
+    passwd: str
 
-    if item_name in item_name_id_map.keys():
-        item_id: int = item_name_id_map[item_name]
-        grocery_list[item_id].quantity += quantity
-    else:
-        item_id = max(grocery_list.keys()) + 1 if grocery_list else 0
-        item = ItemPayload(item_id = item_id, item_name=item_name, quantity=quantity)
-        grocery_list[item_id] = item
-
-    return {'item': grocery_list[item_id]}
+def func(user: UserIn):
+    return 'hello'
 
 
+def mul(x: int):
+    return x * 200
 
-@app.get("/predict/{index}")
-def predict(index: int):
-    return {'forecast reult': forecaster.predict(index)}
+
+class MyParam:
+    def __init__(self, q: str, p: int) -> None:
+        self.queen = 'queen' + q
+        self.plus = p * 100
+
+
+def get_book():
+    print("进入 get_book")
+    yield 'Book 1'
+    print("离开 get_book")
+
+
+@app.post("/user/")
+def hello(book: Annotated[str, Depends(get_book)]) :
+    print(f"第一次：{book}")
+
+    time.sleep(2)
+    pass
