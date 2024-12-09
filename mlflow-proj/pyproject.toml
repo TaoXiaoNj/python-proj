@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "mlflow-proj"
+version = "0.1.0"
+description = ""
+authors = ["Tao Xiao"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+mlflow = "^2.18.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
