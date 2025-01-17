@@ -6,7 +6,7 @@ authors = ["Tao Xiao"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 pandas = "^2.2.2"
 numpy = "^2.1.0"
 mglearn = "^0.2.0"
