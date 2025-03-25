@@ -86,6 +86,7 @@ def run_with_output_parser():
 
 ## 试试【JsonOutputParser】
 def run_with_JsonOutputParser():
+    # 这里声明了返回格式
     class Book(BaseModel):
         title: str = Field(description='作品名称')
         description: str = Field(description='作品简介')
