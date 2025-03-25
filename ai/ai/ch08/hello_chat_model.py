@@ -78,6 +78,7 @@ def run_with_output_parser():
         'user-text': '离离原上草，一岁一枯荣！'
     })
 
+    # 输出结果被直接解析成了字符串
     for resp_content in stream:
         print(resp_content, end='|')
 
