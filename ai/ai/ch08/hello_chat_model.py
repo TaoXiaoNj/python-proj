@@ -1,5 +1,6 @@
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
@@ -59,9 +60,32 @@ def run_with_prompt_template():
         print(response.content, end='|')
 
 
+## 试试 【Output Parser】
+def run_with_output_parser():
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ('system', '请将下列中文翻译成英语'),
+            ('user', '{user-text}')
+        ]
+    )
+
+    model = ChatOpenAI(model='gpt-4o-mini')
+    parser = StrOutputParser()
+
+    chain = prompt | model | parser
+
+    stream = chain.stream({
+        'user-text': '离离原上草，一岁一枯荣！'
+    })
+
+    for resp_content in stream:
+        print(resp_content, end='|')
+
+
 ## 假定环境变量 OPENAI_API_KEY 已经存在
 if __name__ == '__main__':
     # run_init_chat_model()
     # run_chat_openai()
     # run_chat_openai_async()
-    run_with_prompt_template()
+    # run_with_prompt_template()
+    run_with_output_parser()
