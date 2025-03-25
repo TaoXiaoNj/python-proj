@@ -23,7 +23,18 @@ def run_chat_openai():
     result = model.invoke(messages)
     print(result)
 
+
+# 异步模式接收结果
+def run_chat_openai_async():
+    model = ChatOpenAI(model='gpt-4o-mini')
+    stream = model.stream(messages)
+
+    for response in stream:
+        print(response.content, end='|')
+    
+
 ## 假定环境变量 OPENAI_API_KEY 已经存在
 if __name__ == '__main__':
     # run_init_chat_model()
-    run_chat_openai()
+    # run_chat_openai()
+    run_chat_openai_async()
