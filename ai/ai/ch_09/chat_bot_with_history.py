@@ -1,5 +1,6 @@
 from langchain_core.chat_history import InMemoryChatMessageHistory, BaseChatMessageHistory
 from langchain_core.messages import HumanMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
 
@@ -37,5 +38,40 @@ def run_chat_bot_with_history():
         print()
 
 
+## 通过提示词模板，给系统设定角色
+def run_chat_bot_with_history_as_LuXun():
+    chat_model = ChatOpenAI(model='gpt-4o-mini')
+
+    ## 实际上，我们设定好的提示词每次都会与用户的实际输入，一起发送给大模型
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ('system', '你现在扮演鲁迅，以他的口吻和风格跟我进行对话'),
+            MessagesPlaceholder(variable_name='msg') ## 消息列表占位符
+        ]
+    )
+
+    model = RunnableWithMessageHistory(
+        prompt | chat_model,
+        get_session_history
+    )
+
+    config = {'configurable': {'session_id': 'TAO'}}
+
+    while True:
+        user_input = input('您> ')
+        if user_input.lower() == 'exit':
+            break
+
+        stream = model.stream(
+            {'msg': [HumanMessage(content=user_input)]},
+            config
+        )
+
+        for resp in stream:
+            print(resp.content, end='', flush=True)
+        print()
+
+
 if __name__ == '__main__':
-    run_chat_bot_with_history()
+    # run_chat_bot_with_history()
+    run_chat_bot_with_history_as_LuXun()
