@@ -45,6 +45,11 @@ def run_with_prompt_template():
 
     model = ChatOpenAI(model='gpt-4o-mini')
 
+    prompt = prompt_template.invoke({
+        'text': '床前明月光，疑是地上霜！'
+    })
+    print(f"prompt 的实际内容是 {prompt}")
+
     chain = prompt_template | model
     stream = chain.stream({
         'text': '床前明月光，疑是地上霜！'
