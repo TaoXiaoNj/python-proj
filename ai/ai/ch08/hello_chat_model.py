@@ -1,5 +1,6 @@
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
 messages = [
@@ -16,7 +17,7 @@ def run_init_chat_model():
     print(result)
 
 
-## 直接使用 ChatOpenAI
+## 直接使用【ChatOpenAI】
 def run_chat_openai():
     ## 这是 openai 提供好的 chat model 实现
     model = ChatOpenAI(model='gpt-4o-mini')
@@ -24,17 +25,38 @@ def run_chat_openai():
     print(result)
 
 
-# 异步模式接收结果
+## 【异步】模式接收结果
 def run_chat_openai_async():
     model = ChatOpenAI(model='gpt-4o-mini')
     stream = model.stream(messages)
 
     for response in stream:
         print(response.content, end='|')
-    
+
+
+## 试试【提示词模板】
+def run_with_prompt_template():
+    prompt_template = ChatPromptTemplate.from_messages(
+        [
+            ('system', '请将下列中文翻译成英语'),
+            ('user', '{text}')
+        ]
+    )
+
+    model = ChatOpenAI(model='gpt-4o-mini')
+
+    chain = prompt_template | model
+    stream = chain.stream({
+        'text': '床前明月光，疑是地上霜！'
+    })
+
+    for response in stream:
+        print(response.content, end='|')
+
 
 ## 假定环境变量 OPENAI_API_KEY 已经存在
 if __name__ == '__main__':
     # run_init_chat_model()
     # run_chat_openai()
-    run_chat_openai_async()
+    # run_chat_openai_async()
+    run_with_prompt_template()
