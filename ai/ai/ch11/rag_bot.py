@@ -4,8 +4,8 @@ from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHistory
 from langchain_core.vectorstores import VectorStoreRetriever
-from langchain_openai import ChatOpenAI
 from ai.ch11.hello_vector_store import get_vector_store
+from ai.tool.chat_models import LOCAL_DEEPSEEK_MODEL, LOCAL_LLAMA_MODEL, LOCAL_GEMMA_MODEL
 
 ## 这就是 RAG 里面的 "R".
 ## Retriever 的核心能力是根据文本查询出对应的 Document
@@ -22,7 +22,8 @@ def get_session_history(session_id: str):
     return session_history_store[session_id]
 
 
-chat_model = ChatOpenAI()
+chat_model = LOCAL_DEEPSEEK_MODEL
+
 
 ## 这个提示词模板，包含了：
 ##   - 上下文（context），也就是根据问题从向量数据库检索出来的内容
@@ -31,7 +32,11 @@ chat_model = ChatOpenAI()
 prompt = ChatPromptTemplate.from_messages([
     (
         'system',
-        """你是一个问题回答助手。你可以参考下面提供的上下文来回答问题。如果你不知道或者不确定，就回答【俺不知道】。回答时尽可能简洁。
+        """你是一个简洁的问题回答助手。请严格遵守以下规则：
+        1. 只输出最终答案，不要包含任何思考过程、推理步骤或解释
+        2. 如果答案不在提供的上下文中，直接回答【俺不知道】
+        3. 回答尽可能简短，不超过2句话
+        
         context：{context}"""
     ),
     MessagesPlaceholder(variable_name='history'),
