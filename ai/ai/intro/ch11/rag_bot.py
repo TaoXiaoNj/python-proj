@@ -4,8 +4,8 @@ from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHistory
 from langchain_core.vectorstores import VectorStoreRetriever
-from ai.ch11.hello_vector_store import get_vector_store
-from ai.tool.chat_models import LOCAL_DEEPSEEK_MODEL, LOCAL_LLAMA_MODEL, LOCAL_GEMMA_MODEL
+from ai.intro.ch11.hello_vector_store import get_vector_store
+from ai.intro.tool.chat_models import LOCAL_DEEPSEEK_MODEL
 
 ## 这就是 RAG 里面的 "R".
 ## Retriever 的核心能力是根据文本查询出对应的 Document
