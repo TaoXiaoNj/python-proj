@@ -16,6 +16,8 @@ langchain-google-genai = "^2.1.2"
 langchain-ollama = "^0.3.0"
 transformers = "^4.51.3"
 datasets = "^3.5.0"
+hf-xet = "^1.0.3"
+colorlog = "^6.9.0"
 
 
 [build-system]
