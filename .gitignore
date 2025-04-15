@@ -1,7 +1,7 @@
 mlflow-proj/mlartifacts
 mlflow-proj/mlruns
 
-ai/ai/ch11/hello-db
+ai/ai/intro/ch11/hello-db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
